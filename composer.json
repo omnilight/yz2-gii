@@ -1,6 +1,6 @@
 {
     "name": "omnilight/yz2-gii",
-    "description": "Yz Gii modules",
+    "description": "Yz Gii extension",
     "keywords": ["yii", "framework", "yz", "gii"],
     "minimum-stability": "dev",
     "authors": [
