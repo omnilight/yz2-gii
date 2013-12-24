@@ -44,11 +44,7 @@ class <?= $searchModelClass ?> extends Model
 	 */
 	public function attributeLabels()
 	{
-		return [
-<?php foreach ($labels as $name => $label): ?>
-			<?= "'$name' => '" . addslashes($label) . "',\n" ?>
-<?php endforeach; ?>
-		];
+		return (new <?= $generator->modelClass ?>)->attributeLabels();
 	}
 
 	public function search($params)
