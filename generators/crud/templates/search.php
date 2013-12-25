@@ -44,7 +44,9 @@ class <?= $searchModelClass ?> extends Model
 	 */
 	public function attributeLabels()
 	{
-		return (new <?= $generator->modelClass ?>)->attributeLabels();
+		return array_merge((new <?= $generator->modelClass ?>)->attributeLabels(), [
+			// Custom parameter names
+		]);
 	}
 
 	public function search($params)

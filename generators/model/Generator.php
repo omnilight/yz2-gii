@@ -158,6 +158,7 @@ class Generator extends \yii\gii\Generator
 			$tableSchema = $db->getTableSchema($tableName);
 			$params = [
 				'tableName' => $tableName,
+				'tableAlias' => $this->getTableAlias($tableName),
 				'className' => $className,
 				'tableSchema' => $tableSchema,
 				't9nCategory' => $this->t9nCategory,
@@ -499,6 +500,7 @@ class Generator extends \yii\gii\Generator
 
 	private $_tableNames;
 	private $_classNames;
+	private $_tableAliases;
 
 	/**
 	 * @return array the table names that match the pattern specified by [[tableName]].
@@ -532,6 +534,46 @@ class Generator extends \yii\gii\Generator
 			$this->_classNames[$this->tableName] = $this->modelClass;
 		}
 		return $this->_tableNames = $tableNames;
+	}
+
+	/**
+	 * @param string $tableName
+	 * @return string
+	 */
+	protected function getTableAlias($tableName)
+	{
+		if (isset($this->_tableAliases[$tableName])) {
+			return $this->_tableAliases[$tableName];
+		}
+
+		if (($pos = strrpos($tableName, '.')) !== false) {
+			$tableName = substr($tableName, $pos + 1);
+		}
+
+		$db = $this->getDbConnection();
+		$patterns = [];
+		if (strpos($this->tableName, '*') !== false) {
+			$pattern = $this->tableName;
+			if (($pos = strrpos($pattern, '.')) !== false) {
+				$pattern = substr($pattern, $pos + 1);
+			}
+			$patterns[] = '/^' . str_replace('*', '(\w+)', $pattern) . '$/';
+		}
+		if (!empty($db->tablePrefix)) {
+			$patterns[] = "/^{$db->tablePrefix}(.*?)$/";
+			$patterns[] = "/^(.*?){$db->tablePrefix}$/";
+		} else {
+			$patterns[] = "/^tbl_(.*?)$/";
+		}
+
+		$className = $tableName;
+		foreach ($patterns as $pattern) {
+			if (preg_match($pattern, $tableName, $matches)) {
+				$className = $matches[1];
+				break;
+			}
+		}
+		return $this->_tableAliases[$tableName] = '{{%'.$className.'}}';
 	}
 
 	/**

@@ -5,7 +5,7 @@ use yii\helpers\StringHelper;
 
 /**
  * @var yii\web\View $this
- * @var yii\gii\generators\crud\Generator $generator
+ * @var yz\gii\generators\crud\Generator $generator
  */
 
 echo "<?php\n";
@@ -43,7 +43,7 @@ foreach ($generator->getColumnNames() as $attribute) {
 ?>
 		<div class="form-group">
 			<div class="col-sm-offset-3 col-sm-5">
-				<?= "<?= " ?>Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
+				<?= "<?= " ?>Html::submitButton(\Yii::t('yz/admin','Search'), ['class' => 'btn btn-primary']) ?>
 			</div>
 		</div>
 

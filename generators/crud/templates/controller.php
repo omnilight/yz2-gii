@@ -34,6 +34,7 @@ use <?= ltrim($generator->searchModelClass, '\\') ?><?php if (isset($searchModel
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\web\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -42,14 +43,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 {
 	public function behaviors()
 	{
-		return [
+		return ArrayHelper::merge(parent::behaviors(), [
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
 					'delete' => ['post'],
 				],
 			],
-		];
+		]);
 	}
 
 	/**

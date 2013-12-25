@@ -5,6 +5,7 @@
  * @var yii\web\View $this
  * @var yz\gii\generators\model\Generator $generator
  * @var string $tableName full table name
+ * @var string $tableAlias alias of the table
  * @var string $className class name
  * @var string $t9nCategory translation category
  * @var boolean $prepareForBackend is prepare to backend
@@ -48,7 +49,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 	 */
 	public static function tableName()
 	{
-		return '<?= $tableName ?>';
+		return '<?= $tableAlias ?>';
 	}
 
 <?php if($generator->prepareForBackend): ?>

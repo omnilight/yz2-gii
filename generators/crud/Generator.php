@@ -224,7 +224,10 @@ class Generator extends \yii\gii\Generator
 		}
 		$column = $tableSchema->columns[$attribute];
 		if ($column->phpType === 'boolean') {
-			return "\$form->field(\$model, '$attribute')->checkbox()";
+			return "\$form->field(\$model, '$attribute')->radioList([".
+				"'' => \\Yii::t('yz/admin','All records'), ".
+				"'1' => \\Yii::t('yz/admin','Yes'), ".
+				"'0' => \\Yii::t('yz/admin','No')])";
 		} else {
 			return "\$form->field(\$model, '$attribute')";
 		}
