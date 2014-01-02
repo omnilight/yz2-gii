@@ -23,6 +23,11 @@ class Generator extends \yii\gii\Generator
 	public $moduleClass;
 	public $moduleID;
 
+	public $t9nCategory;
+	public $moduleName;
+	public $moduleDescription;
+	public $moduleIcon;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -46,7 +51,7 @@ class Generator extends \yii\gii\Generator
 	{
 		return array_merge(parent::rules(), [
 			[['moduleID', 'moduleClass'], 'filter', 'filter' => 'trim'],
-			[['moduleID', 'moduleClass'], 'required'],
+			[['moduleID', 'moduleClass', 't9nCategory'], 'required'],
 			[['moduleID'], 'match', 'pattern' => '/^[\w\\-]+$/', 'message' => 'Only word characters and dashes are allowed.'],
 			[['moduleClass'], 'match', 'pattern' => '/^[\w\\\\]*$/', 'message' => 'Only word characters and backslashes are allowed.'],
 			[['moduleClass'], 'validateModuleClass'],
@@ -72,6 +77,10 @@ class Generator extends \yii\gii\Generator
 		return [
 			'moduleID' => 'This refers to the ID of the module, e.g., <code>admin</code>.',
 			'moduleClass' => 'This is the fully qualified class name of the module, e.g., <code>app\modules\admin\Module</code>.',
+			't9nCategory' => 'This is the default translation category for this module',
+			'moduleName' => 'This is the name of the module that is visible in the administration panel',
+			'moduleDescription' => 'This is the description of the module',
+			'moduleIcon' => 'This is the icon of the module',
 		];
 	}
 

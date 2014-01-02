@@ -9,5 +9,8 @@
 <?php
 	echo $form->field($generator, 'moduleClass');
 	echo $form->field($generator, 'moduleID');
+	echo $form->field($generator, 't9nCategory');
+	echo $form->field($generator, 'moduleName');
+	echo $form->field($generator, 'moduleDescription');
 ?>
 </div>

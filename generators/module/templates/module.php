@@ -15,9 +15,23 @@ echo "<?php\n";
 
 namespace <?= $ns ?>;
 
-
+/**
+ * Class Module
+ * @package <?= $ns ?>
+ */
 class <?= $className ?> extends \yz\base\Module
 {
+	public function getName()
+	{
+		return \Yii::t('ms/ozon', 'Ozon Module');
+	}
+
+	public function getDescription()
+	{
+		return \Yii::t('ms/ozon', 'Provides support for Ozon catalog and creation of orders');
+	}
+
+
 	public function init()
 	{
 		parent::init();
