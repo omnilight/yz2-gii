@@ -9,6 +9,7 @@ $className = $generator->moduleClass;
 $pos = strrpos($className, '\\');
 $ns = ltrim(substr($className, 0, $pos), '\\');
 $className = substr($className, $pos + 1);
+$t9nCategory = $generator->t9nCategory;
 
 echo "<?php\n";
 ?>
@@ -17,20 +18,57 @@ namespace <?= $ns ?>;
 
 /**
  * Class Module
- * @package <?= $ns ?>
+ * @package <?= $ns ."\n" ?>
  */
-class <?= $className ?> extends \yz\base\Module
+class <?= $className ?> extends \yz\Module
 {
+	/**
+	 * @inheritdoc
+	 */
+	public function getVersion()
+	{
+		return '0.1';
+	}
+
+	/**
+     * @inheritdoc
+     */
 	public function getName()
 	{
-		return \Yii::t('ms/ozon', 'Ozon Module');
+		return \Yii::t('<?= $t9nCategory ?>', '<?= $generator->moduleName; ?>');
 	}
 
+	/**
+     * @inheritdoc
+     */
 	public function getDescription()
 	{
-		return \Yii::t('ms/ozon', 'Provides support for Ozon catalog and creation of orders');
+		return \Yii::t('<?= $t9nCategory ?>', '<?= $generator->moduleDescription; ?>');
 	}
 
+	/**
+     * @inheritdoc
+     */
+	public function getIcon()
+	{
+		return <?= $generator->moduleIcon?'\yz\icons\Icons::o(\''.$generator->moduleIcon.'\')':'null'; ?>;
+	}
+
+	/**
+     * @inheritdoc
+     */
+    public function getRoutes()
+    {
+        switch(true) {
+            default:
+            case YZ_APP_TYPE_FRONTEND:
+                return [];
+            case YZ_APP_TYPE_BACKEND:
+                return [];
+            case YZ_APP_TYPE_CONSOLE:
+                return [];
+        }
+    }
 
 	public function init()
 	{

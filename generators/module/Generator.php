@@ -20,6 +20,7 @@ use yii\helpers\StringHelper;
  */
 class Generator extends \yii\gii\Generator
 {
+	public $moduleBasePath;
 	public $moduleClass;
 	public $moduleID;
 
@@ -33,7 +34,7 @@ class Generator extends \yii\gii\Generator
 	 */
 	public function getName()
 	{
-		return 'Module Generator';
+		return 'Yz Module Generator';
 	}
 
 	/**
@@ -50,8 +51,8 @@ class Generator extends \yii\gii\Generator
 	public function rules()
 	{
 		return array_merge(parent::rules(), [
-			[['moduleID', 'moduleClass'], 'filter', 'filter' => 'trim'],
-			[['moduleID', 'moduleClass', 't9nCategory'], 'required'],
+			[['moduleID', 'moduleClass','moduleName','moduleDescription','moduleIcon','moduleBasePath'], 'filter', 'filter' => 'trim'],
+			[['moduleID', 'moduleClass', 't9nCategory','moduleName','moduleDescription'], 'required'],
 			[['moduleID'], 'match', 'pattern' => '/^[\w\\-]+$/', 'message' => 'Only word characters and dashes are allowed.'],
 			[['moduleClass'], 'match', 'pattern' => '/^[\w\\\\]*$/', 'message' => 'Only word characters and backslashes are allowed.'],
 			[['moduleClass'], 'validateModuleClass'],
@@ -64,8 +65,10 @@ class Generator extends \yii\gii\Generator
 	public function attributeLabels()
 	{
 		return [
+			'moduleBasePath' => 'Base Path',
 			'moduleID' => 'Module ID',
 			'moduleClass' => 'Module Class',
+			't9nCategory' => 'Translation category',
 		];
 	}
 
@@ -75,8 +78,9 @@ class Generator extends \yii\gii\Generator
 	public function hints()
 	{
 		return [
+			'moduleBasePath' => 'Base path to the module, e.g., <code>vendor/company/moduleName</code>',
 			'moduleID' => 'This refers to the ID of the module, e.g., <code>admin</code>.',
-			'moduleClass' => 'This is the fully qualified class name of the module, e.g., <code>app\modules\admin\Module</code>.',
+			'moduleClass' => 'This is the fully qualified class name of the module, e.g., <code>yz/admin/Module</code>.',
 			't9nCategory' => 'This is the default translation category for this module',
 			'moduleName' => 'This is the name of the module that is visible in the administration panel',
 			'moduleDescription' => 'This is the description of the module',
@@ -139,6 +143,10 @@ EOD;
 			$modulePath . '/views/frontend/default/index.php',
 			$this->render("view.php")
 		);
+		$files[] = new CodeFile(
+			$modulePath . '/messages/config.php',
+			$this->render("messages.php")
+		);
 
 		return $files;
 	}
@@ -148,8 +156,14 @@ EOD;
 	 */
 	public function validateModuleClass()
 	{
-		if (strpos($this->moduleClass, '\\') === false || Yii::getAlias('@' . str_replace('\\', '/', $this->moduleClass), false) === false) {
-			$this->addError('moduleClass', 'Module class must be properly namespaced.');
+		if ($this->moduleBasePath == '') {
+			if (strpos($this->moduleClass, '\\') === false || Yii::getAlias('@' . str_replace('\\', '/', $this->moduleClass), false) === false) {
+				$this->addError('moduleClass', 'Module class must be properly namespaced.');
+			}
+		} else {
+			if (strpos($this->moduleClass, '\\') === false || Yii::getAlias('@' . $this->moduleBasePath . '/' . str_replace('\\', '/', $this->moduleClass), false) === false) {
+				$this->addError('moduleClass', 'Module class must be properly namespaced.');
+			}
 		}
 		if (substr($this->moduleClass, -1, 1) == '\\') {
 			$this->addError('moduleClass', 'Module class name must not be empty. Please enter a fully qualified class name. e.g. "app\\modules\\admin\\Module".');
@@ -161,7 +175,7 @@ EOD;
 	 */
 	public function getModulePath()
 	{
-		return Yii::getAlias('@' . str_replace('\\', '/', substr($this->moduleClass, 0, strrpos($this->moduleClass, '\\'))));
+		return Yii::getAlias('@' . $this->moduleBasePath . '/' . str_replace('\\', '/', substr($this->moduleClass, 0, strrpos($this->moduleClass, '\\'))));
 	}
 
 	/**

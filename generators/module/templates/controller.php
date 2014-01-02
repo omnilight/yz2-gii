@@ -8,7 +8,7 @@
 echo "<?php\n";
 ?>
 
-namespace <?= $generator->getControllerNamespace() ?>;
+namespace <?= $generator->getControllerNamespace() ?>\frontend;
 
 use yii\web\Controller;
 
