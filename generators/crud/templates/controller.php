@@ -79,6 +79,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		$model = new <?= $modelClass ?>;
 
 		if ($model->load($_POST) && $model->save()) {
+			\Yii::$app->messages->success(\Yii::t('yz/admin', 'Record was successfully created'));
 			if (isset($_POST['save_and_stay'])) {
 				return $this->redirect(['update', <?= $urlParams ?>]);
 			} elseif (isset($_POST['save_and_create'])) {
@@ -104,6 +105,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		$model = $this->findModel(<?= $actionParams ?>);
 
 		if ($model->load($_POST) && $model->save()) {
+			\Yii::$app->messages->success(\Yii::t('yz/admin', 'Record was successfully updated'));
 			if (isset($_POST['save_and_stay'])) {
 				return $this->redirect(['update', <?= $urlParams ?>]);
 			} else {
@@ -124,6 +126,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	 */
 	public function actionDelete(<?= $actionParams ?>)
 	{
+		\Yii::$app->messages->success(\Yii::t('yz/admin', 'Record was successfully deleted'));
 		$this->findModel(<?= $actionParams ?>)->delete();
 		return $this->redirect(['index']);
 	}
