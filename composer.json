@@ -21,6 +21,6 @@
     },
     "target-dir": "yz/gii",
     "extra": {
-        "bootstrap": "yz\\admin\\Extension"
+        "bootstrap": "yz\\gii\\Extension"
     }
 }
