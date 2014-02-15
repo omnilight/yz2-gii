@@ -36,14 +36,15 @@ return [
 	// boolean, whether to remove messages that no longer appear in the source code.
 	// Defaults to false, which means each of these messages will be enclosed with a pair of '@@' marks.
 	'removeUnused' => false,
-	// array, list of patterns that specify which files/directories should be processed.
+	// array, list of patterns that specify which files/directories should NOT be processed.
 	// If empty or not set, all files/directories will be processed.
 	// A path matches a pattern if it contains the pattern string at its end. For example,
 	// '/a/b' will match all files and directories ending with '/a/b';
-	// and the '.svn' will match all files and directories whose name ends with '.svn'.
+	// the '*.svn' will match all files and directories whose name ends with '.svn'.
+	// and the '.svn' will match all files and directories named exactly '.svn'.
 	// Note, the '/' characters in a pattern matches both '/' and '\'.
-	// If a file/directory matches both a pattern in "only" and "except", it will NOT be processed.
-	'only' => ['.php'],
+	// See helpers/FileHelper::findFiles() description for more details on pattern matching rules.
+	'only' => ['*.php'],
 	// array, list of patterns that specify which files/directories should NOT be processed.
 	// If empty or not set, all files/directories will be processed.
 	// Please refer to "only" for details about the patterns.
@@ -56,4 +57,9 @@ return [
 		'.hgkeep',
 		'/messages',
 	],
+	// Generated file format. Can be either "php", "po" or "db".
+	'format' => 'php',
+	// When format is "db", you may specify the following two options
+	//'db' => 'db',
+	//'sourceMessageTable' => '{{%source_message}}',
 ];
