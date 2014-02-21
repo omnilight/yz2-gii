@@ -35,6 +35,8 @@ use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\web\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\web\Response;
+use yz\admin\widgets\ActiveForm;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -78,6 +80,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	{
 		$model = new <?= $modelClass ?>;
 
+		if (\Yii::$app->request->isAjax) {
+			\Yii::$app->response->format = Response::FORMAT_JSON;
+			$model->load($_POST);
+			return ActiveForm::validate($model);
+		}
+
 		if ($model->load($_POST) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully created'));
 			if (isset($_POST['save_and_stay'])) {
@@ -103,6 +111,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 	public function actionUpdate(<?= $actionParams ?>)
 	{
 		$model = $this->findModel(<?= $actionParams ?>);
+
+		if (\Yii::$app->request->isAjax) {
+			\Yii::$app->response->format = Response::FORMAT_JSON;
+			$model->load($_POST);
+			return ActiveForm::validate($model);
+		}
 
 		if ($model->load($_POST) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully updated'));
