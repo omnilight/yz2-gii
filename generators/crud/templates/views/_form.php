@@ -28,7 +28,7 @@ use yz\admin\widgets\ActiveForm;
  */
 ?>
 
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form crud-form">
 
 	<?= "<?php " ?>$form = ActiveForm::begin([
 		'enableAjaxValidation' => true,
@@ -37,7 +37,7 @@ use yz\admin\widgets\ActiveForm;
 <?php foreach ($safeAttributes as $attribute) {
 	echo "\t\t<?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
 } ?>
-		<div class="form-group">
+		<div class="form-group form-actions">
 			<div class="col-sm-offset-2 col-sm-10">
 				<?= "<?= " ?>Html::submitButton($model->isNewRecord ? \Yii::t('yz/admin','Create') : \Yii::t('yz/admin','Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => 'save_and_stay']) ?>
 				<?= "<?= " ?>Html::submitButton($model->isNewRecord ? \Yii::t('yz/admin','Create & Exit') : \Yii::t('yz/admin','Update & Exit'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
