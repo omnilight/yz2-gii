@@ -17,9 +17,8 @@
         "omnilight/yz2": "dev-master"
     },
     "autoload": {
-        "psr-0": { "yz\\gii\\": "" }
+        "psr-4": { "yz\\gii\\": "" }
     },
-    "target-dir": "yz/gii",
     "extra": {
         "bootstrap": "yz\\gii\\Extension"
     }
