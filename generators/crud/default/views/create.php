@@ -8,8 +8,6 @@ use yii\helpers\StringHelper;
  * @var yii\gii\generators\crud\Generator $generator
  */
 
-$urlParams = $generator->generateUrlParams();
-
 echo "<?php\n";
 ?>
 
@@ -21,18 +19,15 @@ use yz\admin\widgets\ActionButtons;
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  */
 
-$this->title = \Yii::t('yz/admin','Update {item}: {title}', [
-	'item' => <?= $generator->modelClass ?>::modelTitle(),
-	'title' => $model-><?= $generator->getNameAttribute() ?>,
-]);
+$this->title = \Yii::t('yz/admin','Create object "{item}"', ['item' => <?= $generator->modelClass ?>::modelTitle()]);
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->modelClass ?>::modelTitlePlural(), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-create">
 
 	<div class="btn-toolbar pull-right">
 		<?= "<?= " ?> ActionButtons::widget([
-			'order' => [['index', 'update', 'return']],
+			'order' => [['index', 'create', 'return']],
 			'addReturnUrl' => false,
 		]) ?>
 	</div>
