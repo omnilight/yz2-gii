@@ -86,15 +86,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 			return ActiveForm::validate($model);
 		}
 
-		if ($model->load($_POST) && $model->save()) {
+		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully created'));
-			if (isset($_POST['save_and_stay'])) {
-				return $this->redirect(['update', <?= $urlParams ?>]);
-			} elseif (isset($_POST['save_and_create'])) {
-				return $this->redirect(['create']);
-			} else {
-				return $this->redirect(['index']);
-			}
+			return $this->getCreateUpdateResponse($model);
 		} else {
 			return $this->render('create', [
 				'model' => $model,
@@ -114,17 +108,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
 		if (\Yii::$app->request->isAjax) {
 			\Yii::$app->response->format = Response::FORMAT_JSON;
-			$model->load($_POST);
+			$model->load(\Yii::$app->request->post());
 			return ActiveForm::validate($model);
 		}
 
-		if ($model->load($_POST) && $model->save()) {
+		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully updated'));
-			if (isset($_POST['save_and_stay'])) {
-				return $this->redirect(['update', <?= $urlParams ?>]);
-			} else {
-				return $this->redirect(['index']);
-			}
+			return $this->getCreateUpdateResponse($model);
 		} else {
 			return $this->render('update', [
 				'model' => $model,
