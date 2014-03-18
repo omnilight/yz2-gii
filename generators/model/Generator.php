@@ -479,7 +479,7 @@ class Generator extends \yii\gii\Generator
     {
         $classes = [];
         if ($this->prepareForBackend) {
-            $classes[] = 'yz\admin\models\AdminableInterface';
+            $classes[] = 'yz\interfaces\ModelInfoInterface';
         }
 
         return $classes;
@@ -492,7 +492,7 @@ class Generator extends \yii\gii\Generator
     {
         $interfaces = [];
         if ($this->prepareForBackend) {
-            $interfaces[] = 'AdminableInterface';
+            $interfaces[] = 'ModelInfoInterface';
         }
 
         return $interfaces;
