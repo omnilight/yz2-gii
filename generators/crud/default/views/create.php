@@ -19,23 +19,23 @@ use yz\admin\widgets\ActionButtons;
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  */
 
-$this->title = \Yii::t('yz/admin','Create object "{item}"', ['item' => <?= $generator->modelClass ?>::modelTitle()]);
+$this->title = \Yii::t('admin/t','Create object "{item}"', ['item' => <?= $generator->modelClass ?>::modelTitle()]);
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->modelClass ?>::modelTitlePlural(), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-create">
 
-	<div class="btn-toolbar pull-right">
-		<?= "<?= " ?> ActionButtons::widget([
-			'order' => [['index', 'create', 'return']],
-			'addReturnUrl' => false,
-		]) ?>
-	</div>
+    <div class="btn-toolbar pull-right">
+        <?= "<?= " ?> ActionButtons::widget([
+            'order' => [['index', 'create', 'return']],
+            'addReturnUrl' => false,
+        ]) ?>
+    </div>
 
-	<h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
+    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
-	<?= "<?php " ?>echo $this->render('_form', [
-		'model' => $model,
-	]); ?>
+    <?= "<?php " ?>echo $this->render('_form', [
+        'model' => $model,
+    ]); ?>
 
 </div>

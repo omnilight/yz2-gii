@@ -29,63 +29,63 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
 
-	<div class="btn-toolbar pull-right">
-		<?= "<?= " ?> ActionButtons::widget([
-			'order' => [['search'], ['export', 'create', 'delete', 'return']],
-			'gridId' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
-			'searchModel' => $searchModel,
-			'modelClass' => '<?= $generator->modelClass ?>',
-		]) ?>
-	</div>
+    <div class="btn-toolbar pull-right">
+        <?= "<?= " ?> ActionButtons::widget([
+            'order' => [['search'], ['export', 'create', 'delete', 'return']],
+            'gridId' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
+            'searchModel' => $searchModel,
+            'modelClass' => '<?= $generator->modelClass ?>',
+        ]) ?>
+    </div>
 
-	<h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
+    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
-	<?= "<?php " ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?= "<?php " ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
-	<?= "<?php " ?>echo GridView::widget([
-		'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
-		'dataProvider' => $dataProvider,
-		//'filterModel' => $searchModel,
-		'columns' => [
-			['class' => 'yii\grid\CheckboxColumn'],
+    <?= "<?php " ?>echo GridView::widget([
+        'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
+        'dataProvider' => $dataProvider,
+        //'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\CheckboxColumn'],
 
 <?php
 $count = 0;
 if (($tableSchema = $generator->getTableSchema()) === false) {
-	foreach ($generator->getColumnNames() as $name) {
-		if (++$count < 6) {
-			echo "\t\t\t'" . $name . "',\n";
-		} else {
-			echo "\t\t\t// '" . $name . "',\n";
-		}
-	}
+    foreach ($generator->getColumnNames() as $name) {
+        if (++$count < 6) {
+            echo "\t\t\t'" . $name . "',\n";
+        } else {
+            echo "\t\t\t// '" . $name . "',\n";
+        }
+    }
 } else {
-	foreach ($tableSchema->columns as $column) {
-		$format = $generator->generateColumnFormat($column);
-		if (++$count < 6) {
-			echo "\t\t\t'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-		} else {
-			echo "\t\t\t// '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-		}
-	}
+    foreach ($tableSchema->columns as $column) {
+        $format = $generator->generateColumnFormat($column);
+        if (++$count < 6) {
+            echo "\t\t\t'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        } else {
+            echo "\t\t\t// '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
+    }
 }
 ?>
 
-			[
-				'class' => 'yz\admin\widgets\ActionColumn',
-				'template' => '{update} {delete}',
-			],
-		],
-	]); ?>
+            [
+                'class' => 'yz\admin\widgets\ActionColumn',
+                'template' => '{update} {delete}',
+            ],
+        ],
+    ]); ?>
 <?php else: ?>
-	<?= "<?php " ?>echo ListView::widget([
-		'dataProvider' => $dataProvider,
-		'itemOptions' => ['class' => 'item'],
-		'itemView' => function ($model, $key, $index, $widget) {
-			return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
-		},
-	]); ?>
+    <?= "<?php " ?>echo ListView::widget([
+        'dataProvider' => $dataProvider,
+        'itemOptions' => ['class' => 'item'],
+        'itemView' => function ($model, $key, $index, $widget) {
+            return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
+        },
+    ]); ?>
 <?php endif; ?>
 
 </div>

@@ -14,7 +14,7 @@ $controllerClass = StringHelper::basename($generator->controllerClass);
 $modelClass = StringHelper::basename($generator->modelClass);
 $searchModelClass = StringHelper::basename($generator->searchModelClass);
 if ($modelClass === $searchModelClass) {
-	$searchModelAlias = $searchModelClass.'Search';
+    $searchModelAlias = $searchModelClass . 'Search';
 }
 
 /** @var ActiveRecordInterface $class */
@@ -29,8 +29,9 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
+use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
-use <?= ltrim($generator->searchModelClass, '\\') ?><?php if (isset($searchModelAlias)):?> as <?= $searchModelAlias ?><?php endif ?>;
+use <?= ltrim($generator->searchModelClass, '\\') . (isset($searchModelAlias) ? " as $searchModelAlias" : "") ?>;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\web\VerbFilter;
@@ -45,40 +46,40 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 {
 	public function behaviors()
 	{
-		return ArrayHelper::merge(parent::behaviors(), [
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['post'],
-				],
-			],
+        return ArrayHelper::merge(parent::behaviors(), [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
 		]);
-	}
+    }
 
-	/**
-	 * Lists all <?= $modelClass ?> models.
+    /**
+     * Lists all <?= $modelClass ?> models.
 	 * @param string $export Set export type
-	 * @return mixed
-	 */
+     * @return mixed
+     */
 	public function actionIndex($export = null)
-	{
-		$searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
-		$dataProvider = $searchModel->search($_GET);
+    {
+        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
-		return $this->render('index', [
-			'dataProvider' => $dataProvider,
-			'searchModel' => $searchModel,
-		]);
-	}
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
 
-	/**
-	 * Creates a new <?= $modelClass ?> model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 * @return mixed
-	 */
-	public function actionCreate()
-	{
-		$model = new <?= $modelClass ?>;
+    /**
+     * Creates a new <?= $modelClass ?> model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new <?= $modelClass ?>;
 
 		if (\Yii::$app->request->isAjax) {
 			\Yii::$app->response->format = Response::FORMAT_JSON;
@@ -87,7 +88,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 
 		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully created'));
+			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully created'));
 			return $this->getCreateUpdateResponse($model);
 		} else {
 			return $this->render('create', [
@@ -113,7 +114,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 
 		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully updated'));
+			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully updated'));
 			return $this->getCreateUpdateResponse($model);
 		} else {
 			return $this->render('update', [
@@ -122,18 +123,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		}
 	}
 
-	/**
-	 * Deletes an existing <?= $modelClass ?> model.
-	 * If deletion is successful, the browser will be redirected to the 'index' page.
-	 * <?= implode("\n\t * ", $actionParamComments) . "\n" ?>
-	 * @return mixed
-	 */
-	public function actionDelete(<?= $actionParams ?>)
-	{
-		\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('yz/admin', 'Record was successfully deleted'));
-		$this->findModel(<?= $actionParams ?>)->delete();
-		return $this->redirect(['index']);
-	}
 
     /**
      * Deletes an existing <?= $modelClass ?> model.
@@ -176,30 +165,33 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return $this->redirect(['index']);
     }
 
-	/**
-	 * Finds the <?= $modelClass ?> model based on its primary key value.
-	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 * <?= implode("\n\t * ", $actionParamComments) . "\n" ?>
-	 * @return <?= $modelClass ?> the loaded model
-	 * @throws NotFoundHttpException if the model cannot be found
-	 */
-	protected function findModel(<?= $actionParams ?>)
-	{
+    /**
+     * Finds the <?= $modelClass ?> model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
+     * @return <?=                   $modelClass ?> the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel(<?= $actionParams ?>)
+    {
 <?php
 if (count($pks) === 1) {
-	$condition = '$id';
+    $condition = '$id';
+    // find() would return Query when $id === null
+    $nullCheck = '$id !== null && ';
 } else {
-	$condition = [];
-	foreach ($pks as $pk) {
-		$condition[] = "'$pk' => \$$pk";
-	}
-	$condition = '[' . implode(', ', $condition) . ']';
+    $condition = [];
+    foreach ($pks as $pk) {
+        $condition[] = "'$pk' => \$$pk";
+    }
+    $condition = '[' . implode(', ', $condition) . ']';
+    $nullCheck = '';
 }
 ?>
-		if (($model = <?= $modelClass ?>::find(<?= $condition ?>)) !== null) {
-			return $model;
-		} else {
-			throw new NotFoundHttpException('The requested page does not exist.');
-		}
-	}
+        if (<?= $nullCheck ?>($model = <?= $modelClass ?>::find(<?= $condition ?>)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }

@@ -25,7 +25,7 @@ class Generator extends \yii\gii\Generator
     public $modelClass;
     public $moduleID;
     public $controllerClass;
-    public $baseControllerClass = 'yz\admin\components\BackendController';
+    public $baseControllerClass = 'backend\base\Controller';
     public $indexWidgetType = 'grid';
     public $searchModelClass;
 
