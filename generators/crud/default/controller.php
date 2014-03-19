@@ -135,6 +135,47 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		return $this->redirect(['index']);
 	}
 
+    /**
+     * Deletes an existing <?= $modelClass ?> model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * * <?= implode("\n\t * ", $actionParamComments) . "\n" ?>
+     * @return mixed
+     */
+    public function actionDelete(<?= $actionParams ?>)
+    {
+<?php if (count($pks) == 1): ?>
+        if (is_array(<?= $actionParams ?>)) {
+            $message = \Yii::t('admin/t', 'Records were successfully deleted');
+        } else {
+            <?= $actionParams ?> = (array)<?= $actionParams ?>;
+            $message = \Yii::t('admin/t', 'Record was successfully deleted');
+        }
+
+        foreach (<?= $actionParams ?> as <?= $actionParams ?>_)
+            $this->findModel(<?= $actionParams ?>_)->delete();
+<?php else: ?>
+<?php
+    $condition = 'is_array('.implode(') && is_array(',$pks).')';
+?>
+        if ($condition) {
+            $keys = array_map(null, <?= $actionParams ?>);
+            $message = \Yii::t('admin/t', 'Records were successfully deleted');
+        } else {
+            $keys = [[<?= $actionParams ?>]];
+            $message = \Yii::t('admin/t', 'Record was successfully deleted');
+        }
+
+        foreach ($keys as $key) {
+            list(<?= $actionParams ?>) = $key;
+            $this->findModel(<?= $actionParams ?>)->delete();
+        }
+<?php endif; ?>
+
+        \Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, $message);
+
+        return $this->redirect(['index']);
+    }
+
 	/**
 	 * Finds the <?= $modelClass ?> model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
