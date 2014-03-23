@@ -96,12 +96,12 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 	}
 <?php foreach ($relations as $name => $relation): ?>
 
-	/**
-	 * @return \yii\db\ActiveQueryInterface
-	 */
-	public function get<?= $name ?>()
-	{
-		<?= $relation[0] . "\n" ?>
-	}
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function get<?= $name ?>()
+    {
+        <?= $relation[0] . "\n" ?>
+    }
 <?php endforeach; ?>
 }
