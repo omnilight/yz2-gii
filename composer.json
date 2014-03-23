@@ -20,6 +20,6 @@
         "psr-4": { "yz\\gii\\": "" }
     },
     "extra": {
-        "bootstrap": "yz\\gii\\Extension"
+        "bootstrap": "yz\\gii\\Bootstrap"
     }
 }
