@@ -20,11 +20,7 @@ use yz\admin\widgets\ActionButtons;
  * @var yii\web\View $this
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  */
-
-$this->title = \Yii::t('admin/t','Update object "{item}": {title}', [
-    'item' => <?= $generator->modelClass ?>::modelTitle(),
-    'title' => $model-><?= $generator->getNameAttribute() ?>,
-]);
+$this->title = <?= $generator->generateString('Update "{item}": {title}', ['item' => $generator->modelClass.'::modelTitle()','title' => '$model->'.$generator->getNameAttribute()]) ?>
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->modelClass ?>::modelTitlePlural(), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

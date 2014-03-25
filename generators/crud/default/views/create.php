@@ -19,7 +19,7 @@ use yz\admin\widgets\ActionButtons;
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  */
 
-$this->title = \Yii::t('admin/t','Create object "{item}"', ['item' => <?= $generator->modelClass ?>::modelTitle()]);
+$this->title = <?= $generator->generateString('Create {item}', ['item' => $generator->modelClass.'::modelTitle()']) ?>
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->modelClass ?>::modelTitlePlural(), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

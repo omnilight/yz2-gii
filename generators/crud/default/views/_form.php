@@ -35,14 +35,14 @@ use yz\admin\widgets\ActiveForm;
     ]); ?>
 
 <?php foreach ($safeAttributes as $attribute) {
-    echo "\t\t<?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+    echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
 } ?>
         <div class="form-group form-actions">
             <div class="col-sm-offset-2 col-sm-10">
-                <?= "<?= " ?>Html::submitButton($model->isNewRecord ? \Yii::t('admin/t','Create') : \Yii::t('admin/t','Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => '__action', 'value' => 'save_and_stay']) ?>
-                <?= "<?= " ?>Html::submitButton($model->isNewRecord ? \Yii::t('admin/t','Create & Exit') : \Yii::t('admin/t','Update & Exit'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => '__action', 'value' => 'save_and_stay']) ?>
+                <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create & Exit') ?> : <?= $generator->generateString('Update & Exit') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
                 <?= "<?php " ?>if ($model->isNewRecord): ?>
-                    <?= "<?= " ?>Html::submitButton(\Yii::t('admin/t','Create & Then Create Another One'), ['class' => 'btn btn-success', 'name' => '__action', 'value' => 'save_and_create']) ?>
+                    <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Create & Create Another One') ?>, ['class' => 'btn btn-success', 'name' => '__action', 'value' => 'save_and_create']) ?>
                 <?= "<?php " ?>endif ?>
             </div>
         </div>
