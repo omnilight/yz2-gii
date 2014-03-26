@@ -7,12 +7,11 @@
  * @var string $tableName full table name
  * @var string $tableAlias alias of the table
  * @var string $className class name
- * @var string $t9nCategory translation category
  * @var boolean $prepareForBackend is prepare to backend
  * @var yii\db\TableSchema $tableSchema
- * @var string[] $labels list of attribute labels (name=>label)
+ * @var string[] $labels list of attribute labels (name => label)
  * @var string[] $rules list of validation rules
- * @var array $relations list of relations (name=>relation declaration)
+ * @var array $relations list of relations (name => relation declaration)
  */
 
 use yii\helpers\Inflector;
@@ -25,6 +24,7 @@ echo "<?php\n";
 
 namespace <?= $generator->ns ?>;
 
+use Yii;
 <?php foreach ($generator->getUsedClasses() as $useClass): ?>
 use <?= ltrim($useClass, '\\') . ";\n"; ?>
 <?php endforeach; ?>
@@ -44,13 +44,13 @@ use <?= ltrim($useClass, '\\') . ";\n"; ?>
  */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . $implement . "\n" ?>
 {
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return '<?= $tableAlias ?>';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '<?= $tableAlias ?>';
+    }
 
 <?php if($generator->prepareForBackend): ?>
 	/**
@@ -59,7 +59,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public static function modelTitle()
     {
-        return \Yii::t('<?= $t9nCategory; ?>', '<?= Inflector::camel2words($className) ?>');
+        return <?= $generator->generateString(Inflector::camel2words($className)) ?>
     }
 
     /**
@@ -68,32 +68,29 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public static function modelTitlePlural()
     {
-        return \Yii::t('<?= $t9nCategory; ?>', '<?= Inflector::camel2words(Inflector::pluralize($className)) ?>');
+        return <?= $generator->generateString(Inflector::camel2words(Inflector::pluralize($className))) ?>
     }
 <?php endif; ?>
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [<?= "\n\t\t\t" . implode(",\n\t\t\t", $rules) . "\n\t\t" ?>];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [<?= "\n            " . implode(",\n            ", $rules) . "\n        " ?>];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
 <?php foreach ($labels as $name => $label): ?>
-			<?= "'$name' => \Yii::t('".$t9nCategory."','" . addslashes($label) . "'),\n" ?>
+            <?= "'$name' => " . $generator->generateString($label) . ",\n" ?>
 <?php endforeach; ?>
-<?php foreach ($relations as $name => $relation): ?>
-			<?= "'".lcfirst($name)."' => \Yii::t('".$t9nCategory."','" . addslashes(Inflector::camel2words($name)) . "'),\n" ?>
-<?php endforeach; ?>
-		];
-	}
+        ];
+    }
 <?php foreach ($relations as $name => $relation): ?>
 
     /**

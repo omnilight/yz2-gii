@@ -7,26 +7,30 @@
 
 namespace yz\gii\generators\model;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
 use yii\db\Schema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
-use Yii;
+use yii\base\NotSupportedException;
 
 /**
  * This generator will generate one or multiple ActiveRecord classes for the specified database table.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @author Pavel Agalecky <pavel.agalecky@gmail.com>
+ * @since 2.0
  */
 class Generator extends \yii\gii\Generator
 {
     public $db = 'db';
-    public $ns = 'app\models';
+    public $ns = 'common\models';
     public $tableName;
     public $modelClass;
     public $baseClass = 'yz\db\ActiveRecord';
     public $generateRelations = true;
     public $generateLabelsFromComments = false;
-    public $t9nCategory = 'app';
     public $prepareForBackend = true;
 
     /**
@@ -51,8 +55,8 @@ class Generator extends \yii\gii\Generator
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['db', 'ns', 'tableName', 'modelClass', 'baseClass', 't9nCategory'], 'filter', 'filter' => 'trim'],
-            [['db', 'ns', 'tableName', 'baseClass', 't9nCategory'], 'required'],
+            [['db', 'ns', 'tableName', 'modelClass', 'baseClass'], 'filter', 'filter' => 'trim'],
+            [['db', 'ns', 'tableName', 'baseClass'], 'required'],
             [['db', 'modelClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
             [['ns', 'baseClass'], 'match', 'pattern' => '/^[\w\\\\]+$/', 'message' => 'Only word characters and backslashes are allowed.'],
             [['tableName'], 'match', 'pattern' => '/^(\w+\.)?([\w\*]+)$/', 'message' => 'Only word characters, and optionally an asterisk and/or a dot are allowed.'],
@@ -62,6 +66,8 @@ class Generator extends \yii\gii\Generator
             [['modelClass'], 'validateModelClass', 'skipOnEmpty' => false],
             [['baseClass'], 'validateClass', 'params' => ['extends' => ActiveRecord::className()]],
             [['generateRelations', 'generateLabelsFromComments', 'prepareForBackend'], 'boolean'],
+            [['enableI18N'], 'boolean'],
+            [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
         ]);
     }
 
@@ -70,7 +76,7 @@ class Generator extends \yii\gii\Generator
      */
     public function attributeLabels()
     {
-        return [
+        return array_merge(parent::attributeLabels(), [
             'ns' => 'Namespace',
             'db' => 'Database Connection ID',
             'tableName' => 'Table Name',
@@ -78,9 +84,7 @@ class Generator extends \yii\gii\Generator
             'baseClass' => 'Base Class',
             'generateRelations' => 'Generate Relations',
             'generateLabelsFromComments' => 'Generate Labels from DB Comments',
-            't9nCategory' => 'Translation category',
-            'prepareForBackend' => 'Generate properties for using model in backend',
-        ];
+        ]);
     }
 
     /**
@@ -88,28 +92,26 @@ class Generator extends \yii\gii\Generator
      */
     public function hints()
     {
-        return [
+        return array_merge(parent::hints(), [
             'ns' => 'This is the namespace of the ActiveRecord class to be generated, e.g., <code>app\models</code>',
             'db' => 'This is the ID of the DB application component.',
             'tableName' => 'This is the name of the DB table that the new ActiveRecord class is associated with, e.g. <code>tbl_post</code>.
-				The table name may consist of the DB schema part if needed, e.g. <code>public.tbl_post</code>.
-				The table name may end with asterisk to match multiple table names, e.g. <code>tbl_*</code>
-				will match tables who name starts with <code>tbl_</code>. In this case, multiple ActiveRecord classes
-				will be generated, one for each matching table name; and the class names will be generated from
-				the matching characters. For example, table <code>tbl_post</code> will generate <code>Post</code>
-				class.',
+                The table name may consist of the DB schema part if needed, e.g. <code>public.tbl_post</code>.
+                The table name may end with asterisk to match multiple table names, e.g. <code>tbl_*</code>
+                will match tables who name starts with <code>tbl_</code>. In this case, multiple ActiveRecord classes
+                will be generated, one for each matching table name; and the class names will be generated from
+                the matching characters. For example, table <code>tbl_post</code> will generate <code>Post</code>
+                class.',
             'modelClass' => 'This is the name of the ActiveRecord class to be generated. The class name should not contain
-				the namespace part as it is specified in "Namespace". You do not need to specify the class name
-				if "Table Name" ends with asterisk, in which case multiple ActiveRecord classes will be generated.',
+                the namespace part as it is specified in "Namespace". You do not need to specify the class name
+                if "Table Name" ends with asterisk, in which case multiple ActiveRecord classes will be generated.',
             'baseClass' => 'This is the base class of the new ActiveRecord class. It should be a fully qualified namespaced class name.',
             'generateRelations' => 'This indicates whether the generator should generate relations based on
-				foreign key constraints it detects in the database. Note that if your database contains too many tables,
-				you may want to uncheck this option to accelerate the code generation process.',
+                foreign key constraints it detects in the database. Note that if your database contains too many tables,
+                you may want to uncheck this option to accelerate the code generation process.',
             'generateLabelsFromComments' => 'This indicates whether the generator should generate attribute labels
-				by using the comments of the corresponding DB columns.',
-            't9nCategory' => 'This is the name of translation category used for function Yii::t',
-            'prepareForBackend' => 'This indicates that Gii must generate special properties to use model in backend',
-        ];
+                by using the comments of the corresponding DB columns.',
+        ]);
     }
 
     /**
@@ -121,8 +123,8 @@ class Generator extends \yii\gii\Generator
         if ($db !== null) {
             return [
                 'tableName' => function () use ($db) {
-                        return $db->getSchema()->getTableNames();
-                    },
+                    return $db->getSchema()->getTableNames();
+                },
             ];
         } else {
             return [];
@@ -142,7 +144,7 @@ class Generator extends \yii\gii\Generator
      */
     public function stickyAttributes()
     {
-        return ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments'];
+        return array_merge(parent::stickyAttributes(), ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments']);
     }
 
     /**
@@ -161,7 +163,6 @@ class Generator extends \yii\gii\Generator
                 'tableAlias' => $this->getTableAlias($tableName),
                 'className' => $className,
                 'tableSchema' => $tableSchema,
-                't9nCategory' => $this->t9nCategory,
                 'prepareForBackend' => $this->prepareForBackend,
                 'labels' => $this->generateLabels($tableSchema),
                 'rules' => $this->generateRules($tableSchema),
@@ -178,8 +179,8 @@ class Generator extends \yii\gii\Generator
 
     /**
      * Generates the attribute labels for the specified table.
-     * @param \yii\db\TableSchema $table the table schema
-     * @return array the generated attribute labels (name => label)
+     * @param  \yii\db\TableSchema $table the table schema
+     * @return array               the generated attribute labels (name => label)
      */
     public function generateLabels($table)
     {
@@ -197,13 +198,14 @@ class Generator extends \yii\gii\Generator
                 $labels[$column->name] = $label;
             }
         }
+
         return $labels;
     }
 
     /**
      * Generates validation rules for the specified table.
-     * @param \yii\db\TableSchema $table the table schema
-     * @return array the generated validation rules
+     * @param  \yii\db\TableSchema $table the table schema
+     * @return array               the generated validation rules
      */
     public function generateRules($table)
     {
@@ -244,13 +246,35 @@ class Generator extends \yii\gii\Generator
                     }
             }
         }
-
         $rules = [];
         foreach ($types as $type => $columns) {
             $rules[] = "[['" . implode("', '", $columns) . "'], '$type']";
         }
         foreach ($lengths as $length => $columns) {
             $rules[] = "[['" . implode("', '", $columns) . "'], 'string', 'max' => $length]";
+        }
+
+        // Unique indexes rules
+        try {
+            $db = $this->getDbConnection();
+            $uniqueIndexes = $db->getSchema()->findUniqueIndexes($table);
+            foreach ($uniqueIndexes as $uniqueColumns) {
+                // Avoid validating auto incrementable columns
+                if (!$this->isUniqueColumnAutoIncrementable($table, $uniqueColumns)) {
+                    $attributesCount = count($uniqueColumns);
+
+                    if ($attributesCount == 1) {
+                        $rules[] = "[['" . $uniqueColumns[0] . "'], 'unique']";
+                    } elseif ($attributesCount > 1) {
+                        $labels = array_intersect_key($this->generateLabels($table), array_flip($uniqueColumns));
+                        $lastLabel = array_pop($labels);
+                        $columnsList = implode("', '", $uniqueColumns);
+                        $rules[] = "[['" . $columnsList . "'], 'unique', 'targetAttribute' => ['" . $columnsList . "'], 'message' => 'The combination of " . implode(', ', $labels) . " and " . $lastLabel . " has already been taken.']";
+                    }
+                }
+            }
+        } catch (NotSupportedException $e) {
+            // doesn't support unique indexes information...do nothing
         }
 
         return $rules;
@@ -322,7 +346,7 @@ class Generator extends \yii\gii\Generator
             $relationName = $this->generateRelationName($relations, $className0, $db->getTableSchema($table0), $table->primaryKey[1], true);
             $relations[$className0][$relationName] = [
                 "return \$this->hasMany($className1::className(), $link)->viaTable('{$table->name}', $viaLink);",
-                $className0,
+                $className1,
                 true,
             ];
 
@@ -331,16 +355,17 @@ class Generator extends \yii\gii\Generator
             $relationName = $this->generateRelationName($relations, $className1, $db->getTableSchema($table1), $table->primaryKey[0], true);
             $relations[$className1][$relationName] = [
                 "return \$this->hasMany($className0::className(), $link)->viaTable('{$table->name}', $viaLink);",
-                $className1,
+                $className0,
                 true,
             ];
         }
+
         return $relations;
     }
 
     /**
      * Generates the link parameter to be used in generating the relation declaration.
-     * @param array $refs reference constraint
+     * @param  array  $refs reference constraint
      * @return string the generated link parameter.
      */
     protected function generateRelationLink($refs)
@@ -349,6 +374,7 @@ class Generator extends \yii\gii\Generator
         foreach ($refs as $a => $b) {
             $pairs[] = "'$a' => '$b'";
         }
+
         return '[' . implode(', ', $pairs) . ']';
     }
 
@@ -358,7 +384,7 @@ class Generator extends \yii\gii\Generator
      * each referencing a column in a different table.
      * @param \yii\db\TableSchema the table being checked
      * @return array|boolean the relevant foreign key constraint information if the table is a pivot table,
-     * or false if the table is not a pivot table.
+     *                       or false if the table is not a pivot table.
      */
     protected function checkPivotTable($table)
     {
@@ -385,12 +411,12 @@ class Generator extends \yii\gii\Generator
 
     /**
      * Generate a relation name for the specified table and a base name.
-     * @param array $relations the relations being generated currently.
-     * @param string $className the class name that will contain the relation declarations
-     * @param \yii\db\TableSchema $table the table schema
-     * @param string $key a base name that the relation name may be generated from
-     * @param boolean $multiple whether this is a has-many relation
-     * @return string the relation name
+     * @param  array               $relations the relations being generated currently.
+     * @param  string              $className the class name that will contain the relation declarations
+     * @param  \yii\db\TableSchema $table     the table schema
+     * @param  string              $key       a base name that the relation name may be generated from
+     * @param  boolean             $multiple  whether this is a has-many relation
+     * @return string              the relation name
      */
     protected function generateRelationName($relations, $className, $table, $key, $multiple)
     {
@@ -417,9 +443,9 @@ class Generator extends \yii\gii\Generator
      */
     public function validateDb()
     {
-        if (Yii::$app->hasComponent($this->db) === false) {
+        if (!Yii::$app->has($this->db)) {
             $this->addError('db', 'There is no application component named "db".');
-        } elseif (!Yii::$app->getComponent($this->db) instanceof Connection) {
+        } elseif (!Yii::$app->get($this->db) instanceof Connection) {
             $this->addError('db', 'The "db" application component must be a DB connection instance.');
         }
     }
@@ -454,8 +480,9 @@ class Generator extends \yii\gii\Generator
      */
     public function validateTableName()
     {
-        if (($pos = strpos($this->tableName, '*')) !== false && substr($this->tableName, -1) !== '*') {
+        if (strpos($this->tableName, '*') !== false && substr($this->tableName, -1) !== '*') {
             $this->addError('tableName', 'Asterisk is only allowed as the last character.');
+
             return;
         }
         $tables = $this->getTableNames();
@@ -533,6 +560,7 @@ class Generator extends \yii\gii\Generator
             $tableNames[] = $this->tableName;
             $this->_classNames[$this->tableName] = $this->modelClass;
         }
+
         return $this->_tableNames = $tableNames;
     }
 
@@ -593,6 +621,8 @@ class Generator extends \yii\gii\Generator
 
         $db = $this->getDbConnection();
         $patterns = [];
+        $patterns[] = "/^{$db->tablePrefix}(.*?)$/";
+        $patterns[] = "/^(.*?){$db->tablePrefix}$/";
         if (strpos($this->tableName, '*') !== false) {
             $pattern = $this->tableName;
             if (($pos = strrpos($pattern, '.')) !== false) {
@@ -600,13 +630,6 @@ class Generator extends \yii\gii\Generator
             }
             $patterns[] = '/^' . str_replace('*', '(\w+)', $pattern) . '$/';
         }
-        if (!empty($db->tablePrefix)) {
-            $patterns[] = "/^{$db->tablePrefix}(.*?)$/";
-            $patterns[] = "/^(.*?){$db->tablePrefix}$/";
-        } else {
-            $patterns[] = "/^tbl_(.*?)$/";
-        }
-
         $className = $tableName;
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $tableName, $matches)) {
@@ -614,7 +637,10 @@ class Generator extends \yii\gii\Generator
                 break;
             }
         }
-        return $this->_classNames[$tableName] = Inflector::id2camel($className, '_');
+
+        $className = Inflector::classify(Inflector::id2camel($className));
+
+        return $this->_classNames[$tableName] = $className;
     }
 
     /**
@@ -623,5 +649,22 @@ class Generator extends \yii\gii\Generator
     protected function getDbConnection()
     {
         return Yii::$app->{$this->db};
+    }
+
+    /**
+     * Checks if any of the specified columns of an unique index is auto incrementable.
+     * @param  \yii\db\TableSchema $table   the table schema
+     * @param  array               $columns columns to check for autoIncrement property
+     * @return boolean             whether any of the specified columns is auto incrementable.
+     */
+    protected function isUniqueColumnAutoIncrementable($table, $columns)
+    {
+        foreach ($columns as $column) {
+            if ($table->columns[$column]->autoIncrement) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
