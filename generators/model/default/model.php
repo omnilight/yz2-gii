@@ -59,7 +59,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public static function modelTitle()
     {
-        return <?= $generator->generateString(Inflector::camel2words($className)) ?>
+        return <?= $generator->generateString(Inflector::camel2words($className)) ?>;
     }
 
     /**
@@ -68,7 +68,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public static function modelTitlePlural()
     {
-        return <?= $generator->generateString(Inflector::camel2words(Inflector::pluralize($className))) ?>
+        return <?= $generator->generateString(Inflector::camel2words(Inflector::pluralize($className))) ?>;
     }
 <?php endif; ?>
 
