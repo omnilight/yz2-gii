@@ -260,9 +260,9 @@ class Generator extends \yii\gii\Generator
         $column = $tableSchema->columns[$attribute];
         if ($column->phpType === 'boolean') {
             return "\$form->field(\$model, '$attribute')->radioList([" .
-            "'' => \\Yii::t('yz/admin','All records'), " .
-            "'1' => \\Yii::t('yz/admin','Yes'), " .
-            "'0' => \\Yii::t('yz/admin','No')])";
+            "'' => \\Yii::t('admin/t','All records'), " .
+            "'1' => \\Yii::t('admin/t','Yes'), " .
+            "'0' => \\Yii::t('admin/t','No')])";
         } else {
             return "\$form->field(\$model, '$attribute')";
         }
