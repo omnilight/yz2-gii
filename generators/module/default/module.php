@@ -54,22 +54,6 @@ class <?= $className ?> extends \yz\Module
 		return <?= $generator->moduleIcon?'\yz\icons\Icons::o(\''.$generator->moduleIcon.'\')':'null'; ?>;
 	}
 
-	/**
-     * @inheritdoc
-     */
-    public function getRoutes()
-    {
-        switch(true) {
-            default:
-            case YZ_APP_TYPE_FRONTEND:
-                return [];
-            case YZ_APP_TYPE_BACKEND:
-                return [];
-            case YZ_APP_TYPE_CONSOLE:
-                return [];
-        }
-    }
-
 	public function init()
 	{
 		parent::init();
