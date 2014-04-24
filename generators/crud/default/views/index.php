@@ -22,6 +22,7 @@ use yz\admin\widgets\ActionButtons;
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var <?= ltrim($generator->searchModelClass, '\\') ?> $searchModel
+ * @var array $columns
  */
 
 $this->title = <?= $generator->modelClass ?>::modelTitlePlural();
@@ -47,36 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
-        'columns' => [
+        'columns' => array_merge([
             ['class' => 'yii\grid\CheckboxColumn'],
-
-<?php
-$count = 0;
-if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        if (++$count < 6) {
-            echo "\t\t\t'" . $name . "',\n";
-        } else {
-            echo "\t\t\t// '" . $name . "',\n";
-        }
-    }
-} else {
-    foreach ($tableSchema->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        if (++$count < 6) {
-            echo "\t\t\t'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        } else {
-            echo "\t\t\t// '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        }
-    }
-}
-?>
-
+        ], $columns, [
             [
                 'class' => 'yz\admin\widgets\ActionColumn',
                 'template' => '{update} {delete}',
             ],
-        ],
+        ]),
     ]); ?>
 <?php else: ?>
     <?= "<?php " ?>echo ListView::widget([

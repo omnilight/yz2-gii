@@ -37,6 +37,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
+use yz\admin\actions\ExportAction;
 use yz\admin\widgets\ActiveForm;
 
 /**
@@ -56,6 +57,22 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 		]);
     }
 
+    public function actions()
+    {
+        return array_merge(parent::actions(), [
+            'export' => [
+                'class' => ExportAction::className(),
+                'dataProvider' => function($params) {
+                        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
+                        $dataProvider = $searchModel->search($params);
+                        $dataProvider->pagination = false;
+                        $dataProvider->sort = false;
+                        return $dataProvider;
+                    },
+            ]
+        ]);
+    }
+
     /**
      * Lists all <?= $modelClass ?> models.
 	 * @param string $export Set export type
@@ -69,7 +86,35 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+            'columns' => $this->getGridColumns(),
         ]);
+    }
+
+    public function getGridColumns()
+    {
+        return [
+<?php
+$count = 0;
+if (($tableSchema = $generator->getTableSchema()) === false) {
+    foreach ($generator->getColumnNames() as $name) {
+        if (++$count < 6) {
+            echo "\t\t\t'" . $name . "',\n";
+        } else {
+            echo "\t\t\t// '" . $name . "',\n";
+        }
+    }
+} else {
+    foreach ($tableSchema->columns as $column) {
+        $format = $generator->generateColumnFormat($column);
+        if (++$count < 6) {
+            echo "\t\t\t'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        } else {
+            echo "\t\t\t// '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        }
+    }
+}
+?>
+        ];
     }
 
     /**
