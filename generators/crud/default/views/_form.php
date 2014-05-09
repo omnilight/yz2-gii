@@ -5,7 +5,7 @@ use yii\helpers\StringHelper;
 
 /**
  * @var yii\web\View $this
- * @var yii\gii\generators\crud\Generator $generator
+ * @var yz\gii\generators\crud\Generator $generator
  */
 
 /** @var \yii\db\ActiveRecord $model */
@@ -37,6 +37,10 @@ use yz\admin\widgets\ActiveForm;
 <?php foreach ($safeAttributes as $attribute) {
     echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
 } ?>
+<?php
+$t9n = $generator->messageCategory;
+$generator->messageCategory = 'admin/t';
+?>
         <div class="form-group form-actions">
             <div class="col-sm-offset-2 col-sm-10">
                 <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => '__action', 'value' => 'save_and_stay']) ?>
@@ -46,7 +50,9 @@ use yz\admin\widgets\ActiveForm;
                 <?= "<?php " ?>endif ?>
             </div>
         </div>
-
+<?php
+$generator->messageCategory = $t9n;
+?>
     <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>

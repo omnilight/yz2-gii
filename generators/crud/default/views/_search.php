@@ -35,9 +35,9 @@ use yz\admin\widgets\ActiveForm;
 $count = 0;
 foreach ($generator->getColumnNames() as $attribute) {
     if (++$count < 6) {
-        echo "\t\t<?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
+        echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
     } else {
-        echo "\t\t<?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
+        echo "    <?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
     }
 }
 ?>

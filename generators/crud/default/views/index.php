@@ -21,7 +21,7 @@ use yz\admin\widgets\ActionButtons;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
- * @var <?= ltrim($generator->searchModelClass, '\\') ?> $searchModel
+<?= !empty($generator->searchModelClass) ? " * @var " . ltrim($generator->searchModelClass, '\\') . " \$searchModel\n" : '' ?>
  * @var array $columns
  */
 
@@ -40,11 +40,12 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
-
-    <?= "<?php " ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php if(!empty($generator->searchModelClass)): ?>
+<?= "    <?php " ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php endif; ?>
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
-    <?= "<?php " ?>echo GridView::widget([
+    <?= "<?= " ?>GridView::widget([
         'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -58,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]),
     ]); ?>
 <?php else: ?>
-    <?= "<?php " ?>echo ListView::widget([
+    <?= "<?= " ?>ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
         'itemView' => function ($model, $key, $index, $widget) {
