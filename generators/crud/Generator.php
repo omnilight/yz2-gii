@@ -298,6 +298,8 @@ class Generator extends \yii\gii\Generator
             return 'bool';
         } elseif (stripos($column->name, '_at') === (strlen($column->name) - 3)) {
             return 'datetime';
+        } elseif (stripos($column->name, '_on') === (strlen($column->name) - 3)) {
+            return 'date';
         } else {
             return 'text';
         }
