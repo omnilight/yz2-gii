@@ -267,11 +267,12 @@ class Generator extends \yii\gii\Generator
             return "\$form->field(\$model, '$attribute')";
         }
         $column = $tableSchema->columns[$attribute];
-        if ($column->phpType === 'boolean') {
-            return "\$form->field(\$model, '$attribute')->radioList([" .
-            "'' => \\Yii::t('admin/t','All records'), " .
-            "'1' => \\Yii::t('admin/t','Yes'), " .
-            "'0' => \\Yii::t('admin/t','No')])";
+        if ($column->phpType === 'boolean' || stripos($column->name, 'is_') === 0) {
+            return "\$form->field(\$model, '$attribute')->radioList([\n" .
+            "        '' => \\Yii::t('admin/t','All records'),\n" .
+            "        '1' => \\Yii::t('admin/t','Yes'),\n" .
+            "        '0' => \\Yii::t('admin/t','No')\n" .
+            "    ])";
         } else {
             return "\$form->field(\$model, '$attribute')";
         }
@@ -295,7 +296,7 @@ class Generator extends \yii\gii\Generator
         } elseif (stripos($column->name, 'url') !== false) {
             return 'url';
         } elseif (stripos($column->name, 'is_') === 0) {
-            return 'bool';
+            return 'boolean';
         } elseif (stripos($column->name, '_at') === (strlen($column->name) - 3)) {
             return 'datetime';
         } elseif (stripos($column->name, '_on') === (strlen($column->name) - 3)) {
