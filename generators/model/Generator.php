@@ -32,7 +32,7 @@ class Generator extends \yii\gii\Generator
     public $generateRelations = true;
     public $generateLabelsFromComments = false;
     public $prepareForBackend = true;
-    public $useTablePrefix = false;
+    public $useTablePrefix = true;
 
     /**
      * @inheritdoc
@@ -510,6 +510,9 @@ class Generator extends \yii\gii\Generator
         }
     }
 
+    protected $tableNames;
+    protected $classNames;
+
     /**
      * @return array
      */
@@ -519,9 +522,6 @@ class Generator extends \yii\gii\Generator
         if ($this->prepareForBackend) {
             $classes[] = 'yz\interfaces\ModelInfoInterface';
         }
-    protected $tableNames;
-    protected $classNames;
-
         return $classes;
     }
 
