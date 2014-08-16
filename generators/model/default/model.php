@@ -49,7 +49,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public static function tableName()
     {
-        return '<?= $tableAlias ?>';
+        return '<?= $generator->generateTableName($tableName) ?>';
     }
 
 <?php if($generator->prepareForBackend): ?>

@@ -110,7 +110,7 @@ class Generator extends \yii\gii\Generator
             'indexWidgetType' => 'This is the widget type to be used in the index page to display list of the models.
                 You may choose either <code>GridView</code> or <code>ListView</code>',
             'searchModelClass' => 'This is the name of the search model class to be generated. You should provide a fully
-                qualified namespaced class name, e.g., <code>app\models\search\PostSearch</code>.',
+                qualified namespaced class name, e.g., <code>app\models\PostSearch</code>.',
         ]);
     }
 
@@ -247,7 +247,14 @@ class Generator extends \yii\gii\Generator
             } else {
                 $input = 'textInput';
             }
-            if ($column->phpType !== 'string' || $column->size === null) {
+            if (is_array($column->enumValues) && count($column->enumValues) > 0) {
+                $dropDownOptions = [];
+                foreach ($column->enumValues as $enumValue) {
+                    $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
+                }
+                return "\$form->field(\$model, '$attribute')->dropDownList("
+                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
+            } elseif ($column->phpType !== 'string' || $column->size === null) {
                 return "\$form->field(\$model, '$attribute')->$input()";
             } else {
                 return "\$form->field(\$model, '$attribute')->$input(['maxlength' => $column->size])";
@@ -375,7 +382,7 @@ class Generator extends \yii\gii\Generator
                     $labels[$name] = 'ID';
                 } else {
                     $label = Inflector::camel2words($name);
-                    if (strcasecmp(substr($label, -3), ' id') === 0) {
+                    if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
                         $label = substr($label, 0, -3) . ' ID';
                     }
                     $labels[$name] = $label;
