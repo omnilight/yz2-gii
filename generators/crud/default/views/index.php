@@ -15,6 +15,7 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
+use yz\admin\widgets\Box;
 use <?= $generator->indexWidgetType === 'grid' ? "yz\\admin\\widgets\\GridView" : "yii\\widgets\\ListView" ?>;
 use yz\admin\widgets\ActionButtons;
 
@@ -27,11 +28,11 @@ use yz\admin\widgets\ActionButtons;
 
 $this->title = <?= $generator->modelClass ?>::modelTitlePlural();
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['header'] = $this->title;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
-
-    <div class="btn-toolbar pull-right">
-        <?= "<?= " ?> ActionButtons::widget([
+<?= "<?php" ?> $box = Box::begin(['cssClass' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index box-primary']) ?>
+    <div class="text-right">
+        <?= "<?php" ?> echo ActionButtons::widget([
             'order' => [['search'], ['export', 'create', 'delete', 'return']],
             'gridId' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
             'searchModel' => $searchModel,
@@ -39,7 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </div>
 
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 <?php if(!empty($generator->searchModelClass)): ?>
 <?= "    <?php " ?>echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
@@ -67,5 +67,4 @@ $this->params['breadcrumbs'][] = $this->title;
         },
     ]); ?>
 <?php endif; ?>
-
-</div>
+<?= "<?php" ?> Box::end() ?>

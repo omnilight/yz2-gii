@@ -19,6 +19,9 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
+use yz\admin\helpers\AdminHtml;
+use yz\admin\widgets\Box;
+use yz\admin\widgets\FormBox;
 use yz\admin\widgets\ActiveForm;
 
 /**
@@ -28,31 +31,20 @@ use yz\admin\widgets\ActiveForm;
  */
 ?>
 
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form crud-form">
+<?= "<?php " ?> $box = FormBox::begin(['cssClass' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form box-primary', 'title' => '']) ?>
+    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
 
-    <?= "<?php " ?>$form = ActiveForm::begin([
-        'enableAjaxValidation' => true,
-    ]); ?>
-
+    <?= "<?php " ?>$box->beginBody() ?>
 <?php foreach ($safeAttributes as $attribute) {
-    echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+    echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
 } ?>
-<?php
-$t9n = $generator->messageCategory;
-$generator->messageCategory = 'admin/t';
-?>
-        <div class="form-group form-actions">
-            <div class="col-sm-offset-2 col-sm-10">
-                <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create') ?> : <?= $generator->generateString('Update') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => '__action', 'value' => 'save_and_stay']) ?>
-                <?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Create & Exit') ?> : <?= $generator->generateString('Update & Exit') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-                <?= "<?php " ?>if ($model->isNewRecord): ?>
-                    <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Create & Create Another One') ?>, ['class' => 'btn btn-success', 'name' => '__action', 'value' => 'save_and_create']) ?>
-                <?= "<?php " ?>endif ?>
-            </div>
-        </div>
-<?php
-$generator->messageCategory = $t9n;
-?>
+    <?= "<?php " ?>$box->endBody() ?>
+
+    <?= "<?php" ?> $box->actions([
+        AdminHtml::actionButton(AdminHtml::ACTION_SAVE_AND_STAY, $model->isNewRecord),
+        AdminHtml::actionButton(AdminHtml::ACTION_SAVE_AND_LEAVE, $model->isNewRecord),
+        AdminHtml::actionButton(AdminHtml::ACTION_SAVE_AND_CREATE, $model->isNewRecord),
+    ]) ?>
     <?= "<?php " ?>ActiveForm::end(); ?>
 
-</div>
+<?= "<?php " ?> FormBox::end() ?>

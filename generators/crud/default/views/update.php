@@ -14,6 +14,7 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
+use yz\admin\widgets\Box;
 use yz\admin\widgets\ActionButtons;
 
 /**
@@ -27,17 +28,18 @@ $this->title = 'Update ' . <?= $generator->modelClass ?>::modelTitle();
 <?php endif ?>
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->modelClass ?>::modelTitlePlural(), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['header'] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
 
-    <div class="btn-toolbar pull-right">
+    <div class="text-right">
+        <?= "<?php " ?> Box::begin() ?>
         <?= "<?= " ?> ActionButtons::widget([
             'order' => [['index', 'update', 'return']],
             'addReturnUrl' => false,
         ]) ?>
+        <?= "<?php " ?> Box::end() ?>
     </div>
-
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
     <?= "<?php " ?>echo $this->render('_form', [
         'model' => $model,
