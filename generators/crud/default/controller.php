@@ -69,8 +69,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'dataProvider' => function($params) {
                         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
                         $dataProvider = $searchModel->search($params);
-                        $dataProvider->pagination = false;
-                        $dataProvider->sort = false;
                         return $dataProvider;
                     },
             ]
