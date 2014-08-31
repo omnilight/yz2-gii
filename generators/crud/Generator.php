@@ -495,6 +495,22 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
+     * Generates parameters for delete action
+     * @return string
+     */
+    public function generateActionDeleteParams()
+    {
+        /** @var ActiveRecord $class */
+        $class = $this->modelClass;
+        $pks = $class::primaryKey();
+        if (count($pks) === 1) {
+            return 'array $id';
+        } else {
+            return 'array $' . implode(', array $', $pks);
+        }
+    }
+
+    /**
      * Generates parameter tags for phpdoc
      * @return array parameter tags for phpdoc
      */

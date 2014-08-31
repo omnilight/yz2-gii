@@ -22,6 +22,7 @@ $class = $generator->modelClass;
 $pks = $class::primaryKey();
 $urlParams = $generator->generateUrlParams();
 $actionParams = $generator->generateActionParams();
+$actionDeleteParams = $generator->generateActionDeleteParams();
 $actionParamComments = $generator->generateActionParamComments();
 
 echo "<?php\n";
@@ -184,18 +185,15 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     /**
      * Deletes an existing <?= $modelClass ?> model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * * <?= implode("\n\t * ", $actionParamComments) . "\n" ?>
+     * <?= implode("\n\t * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
-    public function actionDelete(<?= $actionParams ?>)
+    public function actionDelete(<?= $actionDeleteParams ?>)
     {
 <?php if (count($pks) == 1): ?>
-        if (is_array(<?= $actionParams ?>)) {
-            $message = \Yii::t('admin/t', 'Records were successfully deleted');
-        } else {
-            <?= $actionParams ?> = (array)<?= $actionParams ?>;
-            $message = \Yii::t('admin/t', 'Record was successfully deleted');
-        }
+        $message = is_array(<?= $actionParams ?>) ?
+            \Yii::t('admin/t', 'Records were successfully deleted') : \Yii::t('admin/t', 'Record was successfully deleted');
+        <?= $actionParams ?> = (array)<?= $actionParams ?>;
 
         foreach (<?= $actionParams ?> as <?= $actionParams ?>_)
             $this->findModel(<?= $actionParams ?>_)->delete();
