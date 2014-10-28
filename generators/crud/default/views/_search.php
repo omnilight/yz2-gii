@@ -28,7 +28,7 @@ use yz\admin\widgets\FormBox;
     <?= "<?php" ?> $form = ActiveForm::begin([
         'action' => ['index'],
         'fieldConfig' => [
-            'horizontal' => ['label' => 'col-sm-3', 'input' => 'col-sm-5', 'offset' => 'col-sm-offset-3 col-sm-5'],
+            'horizontalCssClasses' => ['label' => 'col-sm-3', 'input' => 'col-sm-5', 'offset' => 'col-sm-offset-3 col-sm-5'],
         ],
         'method' => 'get',
     ]); ?>
@@ -39,7 +39,7 @@ foreach ($generator->getColumnNames() as $attribute) {
     if (++$count < 6) {
         echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n";
     } else {
-        echo "    <?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n";
+        echo "    <?php /* echo " . $generator->generateActiveSearchField($attribute) . " */ ?>\n";
     }
 }
 ?>
