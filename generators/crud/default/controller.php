@@ -139,12 +139,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     {
         $model = new <?= $modelClass ?>;
 
-		if (\Yii::$app->request->isAjax) {
-			\Yii::$app->response->format = Response::FORMAT_JSON;
-			$model->load($_POST);
-			return ActiveForm::validate($model);
-		}
-
 		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully created'));
 			return $this->getCreateUpdateResponse($model);
@@ -164,12 +158,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     public function actionUpdate(<?= $actionParams ?>)
     {
         $model = $this->findModel(<?= $actionParams ?>);
-
-		if (\Yii::$app->request->isAjax) {
-			\Yii::$app->response->format = Response::FORMAT_JSON;
-			$model->load(\Yii::$app->request->post());
-			return ActiveForm::validate($model);
-		}
 
 		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully updated'));
