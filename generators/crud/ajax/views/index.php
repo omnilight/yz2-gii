@@ -41,11 +41,11 @@ use yz\icons\Icons;
         'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
         'dataProvider' => $dataProvider,
         'columns' => array_merge([
-            ['class' => 'yii\grid\CheckboxColumn'],
+            ['class' => 'yii\grid\CheckboxColumn', 'header' => Icons::i('trash')],
         ], $columns, [
             [
                 'class' => 'yz\admin\widgets\ActionColumn',
-                'template' => '{update} {delete}',
+                'template' => '{update-ajax}',
             ],
         ]),
     ]); ?>
