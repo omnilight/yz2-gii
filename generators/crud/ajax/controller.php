@@ -175,4 +175,33 @@ if (count($pks) === 1) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    /**
+     * This method should be called from the base CRUD controller
+     * @param ActiveRecord $refModel
+     * @param array $data
+     */
+    public static function process($refModel, $data)
+    {
+        $model = new <?= $modelClass ?>;
+        $scope = $model->formName();
+
+        foreach(ArrayHelper::getValue($data, $scope, []) as $id => $modelData) {
+            $modelData = [$scope => $modelData];
+            if (strpos($id, '_') === 0) {
+                $model = new <?= $modelClass ?>;
+            } else {
+                $model = <?= $modelClass ?>::findOne($id);
+            }
+            if ($model === null)
+                continue;
+            $model->load($modelData) && $model->save();
+        }
+
+        foreach(ArrayHelper::getValue($data, 'selection', []) as $id) {
+            $model = <?= $modelClass ?>::findOne($id);
+            if ($model)
+                $model->delete();
+        }
+    }
 }
