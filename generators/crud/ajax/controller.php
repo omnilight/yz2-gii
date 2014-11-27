@@ -184,7 +184,9 @@ if (count($pks) === 1) {
     public static function process($refModel, $data)
     {
         $model = new <?= $modelClass ?>;
+        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
         $scope = $model->formName();
+        $searchScope = $searchModel->formName();
 
         foreach(ArrayHelper::getValue($data, $scope, []) as $id => $modelData) {
             $modelData = [$scope => $modelData];
@@ -198,7 +200,7 @@ if (count($pks) === 1) {
             $model->load($modelData) && $model->save();
         }
 
-        foreach(ArrayHelper::getValue($data, 'selection', []) as $id) {
+        foreach(ArrayHelper::getValue($data, $searchScope.'-selection', []) as $id) {
             $model = <?= $modelClass ?>::findOne($id);
             if ($model)
                 $model->delete();

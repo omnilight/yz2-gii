@@ -41,7 +41,7 @@ use yz\icons\Icons;
         'id' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
         'dataProvider' => $dataProvider,
         'columns' => array_merge([
-            ['class' => 'yii\grid\CheckboxColumn', 'header' => Icons::i('trash')],
+            ['class' => 'yii\grid\CheckboxColumn', 'name' => $searchModel->formName().'-selection', 'header' => Icons::i('trash')],
         ], $columns, [
             [
                 'class' => 'yz\admin\widgets\ActionColumn',
