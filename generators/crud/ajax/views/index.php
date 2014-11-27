@@ -46,6 +46,14 @@ use yz\icons\Icons;
             [
                 'class' => 'yz\admin\widgets\ActionColumn',
                 'template' => '{update-ajax}',
+                'buttons' => [
+                    'update-ajax' => function ($url, $model, $key) {
+                        return Html::a(Icons::i('pencil-square-o fa-lg'), ['update', 'id' => $key], [
+                            'title' => Yii::t('admin/t', 'Update'),
+                            'class' => 'btn btn-success btn-sm js-btn-ajax-crud-update'
+                        ]);
+                    }
+                ]
             ],
         ]),
     ]); ?>
