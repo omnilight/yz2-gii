@@ -26,6 +26,7 @@ use yz\admin\widgets\ActiveForm;
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  * @var yz\admin\widgets\ActiveForm $form
  */
+$index = $model->isNewRecord ? '[_'.time().']' : '['.$model->getPrimaryKey().']';
 ?>
 
 <?= "<?php " ?>ob_start(); $form = ActiveForm::begin(); ob_end_clean(); ?>
