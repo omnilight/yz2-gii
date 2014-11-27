@@ -19,7 +19,6 @@ use yz\admin\widgets\ActionButtons;
  * @var yii\web\View $this
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  */
-$this->title = \Yii::t('admin/t', 'Create {item}', ['item' => <?= $generator->modelClass ?>::modelTitle()]);
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-create">
 
