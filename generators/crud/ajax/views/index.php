@@ -27,18 +27,14 @@ use yz\icons\Icons;
  * @var array $columns
  */
 ?>
-<?= "<?php" ?> $box = Box::begin(['cssClass' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index box-primary']) ?>
-    <div class="text-right">
-        <?= "<?php" ?> echo ActionButtons::widget([
-            'order' => [['create', 'delete']],
-            'gridId' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
-            'searchModel' => $searchModel,
-            'modelClass' => '<?= $generator->modelClass ?>',
-            'buttons' => [
-                'create' => Html::a(Icons::p('plus').'Добавить', ['create'], ['class' => 'btn btn-success js-btn-ajax-crud-create']),
-            ],
-        ]) ?>
-    </div>
+<div class="text-right">
+    <?= "<?php" ?> echo ActionButtons::widget([
+        'order' => [['create-ajax']],
+        'gridId' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
+        'searchModel' => $searchModel,
+        'modelClass' => '<?= $generator->modelClass ?>',
+    ]) ?>
+</div>
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
@@ -62,4 +58,3 @@ use yz\icons\Icons;
         },
     ]); ?>
 <?php endif; ?>
-<?= "<?php" ?> Box::end() ?>

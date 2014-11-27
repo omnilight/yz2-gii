@@ -50,6 +50,8 @@ use yz\admin\widgets\ActiveForm;
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
+    public $layout = '//base';
+
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
@@ -59,20 +61,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                     'delete' => ['post'],
                 ],
             ],
-        ]);
-    }
-
-    public function actions()
-    {
-        return array_merge(parent::actions(), [
-            'export' => [
-                'class' => ExportAction::className(),
-                'dataProvider' => function($params) {
-                        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
-                        $dataProvider = $searchModel->search($params);
-                        return $dataProvider;
-                    },
-            ]
         ]);
     }
 
@@ -86,7 +74,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
-        return $this->render('index', [
+        return $this->renderAjax('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
             'columns' => $this->getGridColumns(),
@@ -96,7 +84,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             'query' => <?= $modelClass ?>::find(),
         ]);
 
-        return $this->render('index', [
+        return $this->renderAjax('index', [
             'dataProvider' => $dataProvider,
             'columns' => $this->getGridColumns(),
         ]);
@@ -139,14 +127,10 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     {
         $model = new <?= $modelClass ?>;
 
-		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully created'));
-			return $this->getCreateUpdateResponse($model);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+
+        return $this->renderAjax('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -159,54 +143,11 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     {
         $model = $this->findModel(<?= $actionParams ?>);
 
-		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully updated'));
-			return $this->getCreateUpdateResponse($model);
-		} else {
-			return $this->render('update', [
-				'model' => $model,
-			]);
-		}
+
+        return $this->renderAjax('update', [
+            'model' => $model,
+        ]);
 	}
-
-
-    /**
-     * Deletes an existing <?= $modelClass ?> model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * <?= implode("\n\t * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     */
-    public function actionDelete(<?= $actionDeleteParams ?>)
-    {
-<?php if (count($pks) == 1): ?>
-        $message = is_array(<?= $actionParams ?>) ?
-            \Yii::t('admin/t', 'Records were successfully deleted') : \Yii::t('admin/t', 'Record was successfully deleted');
-        <?= $actionParams ?> = (array)<?= $actionParams ?>;
-
-        foreach (<?= $actionParams ?> as <?= $actionParams ?>_)
-            $this->findModel(<?= $actionParams ?>_)->delete();
-<?php else: ?>
-<?php
-    $condition = 'is_array('.implode(') && is_array(',$pks).')';
-?>
-        if ($condition) {
-            $keys = array_map(null, <?= $actionParams ?>);
-            $message = \Yii::t('admin/t', 'Records were successfully deleted');
-        } else {
-            $keys = [[<?= $actionParams ?>]];
-            $message = \Yii::t('admin/t', 'Record was successfully deleted');
-        }
-
-        foreach ($keys as $key) {
-            list(<?= $actionParams ?>) = $key;
-            $this->findModel(<?= $actionParams ?>)->delete();
-        }
-<?php endif; ?>
-
-        \Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, $message);
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the <?= $modelClass ?> model based on its primary key value.
