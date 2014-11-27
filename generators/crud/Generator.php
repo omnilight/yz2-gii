@@ -7,13 +7,13 @@
 
 namespace yz\gii\generators\crud;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 use yii\db\Schema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
 use yii\web\Controller;
-use Yii;
 
 /**
  * Generates CRUD
@@ -36,6 +36,11 @@ class Generator extends \yii\gii\Generator
     public $baseControllerClass = 'backend\base\Controller';
     public $indexWidgetType = 'grid';
     public $searchModelClass;
+
+    public $templates = [
+        'default' => '@yz/gii/generators/crud/default',
+        'ajax' => '@yz/gii/generators/crud/ajax',
+    ];
 
     /**
      * @inheritdoc
