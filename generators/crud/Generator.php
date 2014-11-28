@@ -435,11 +435,15 @@ class Generator extends \yii\gii\Generator
                 case Schema::TYPE_FLOAT:
                 case Schema::TYPE_DECIMAL:
                 case Schema::TYPE_MONEY:
-                case Schema::TYPE_DATE:
                 case Schema::TYPE_TIME:
-                case Schema::TYPE_DATETIME:
                 case Schema::TYPE_TIMESTAMP:
                     $hashConditions[] = "'{$column}' => \$this->{$column},";
+                    break;
+                case Schema::TYPE_DATE:
+                    $likeConditions[] = "->andFilterWhere(['like', '{$column}', Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d'), Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d')])";
+                    break;
+                case Schema::TYPE_DATETIME:
+                    $likeConditions[] = "->andFilterWhere(['like', '{$column}', Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d 00:00:00'), Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d 23:59:59')])";
                     break;
                 default:
                     $likeConditions[] = "->andFilterWhere(['like', '{$column}', \$this->{$column}])";
