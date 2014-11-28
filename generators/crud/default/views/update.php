@@ -21,11 +21,7 @@ use yz\admin\widgets\ActionButtons;
  * @var yii\web\View $this
  * @var <?= ltrim($generator->modelClass, '\\') ?> $model
  */
-<?php if ($generator->enableI18N): ?>
 $this->title = \Yii::t('admin/t', 'Update {item}', ['item' => <?= $generator->modelClass ?>::modelTitle()]);
-<?php else: ?>
-$this->title = 'Update ' . <?= $generator->modelClass ?>::modelTitle();
-<?php endif ?>
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->modelClass ?>::modelTitlePlural(), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['header'] = $this->title;
