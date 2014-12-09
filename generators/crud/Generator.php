@@ -440,10 +440,10 @@ class Generator extends \yii\gii\Generator
                     $hashConditions[] = "'{$column}' => \$this->{$column},";
                     break;
                 case Schema::TYPE_DATE:
-                    $likeConditions[] = "->andFilterWhere(['like', '{$column}', Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d'), Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d')])";
+                    $likeConditions[] = "->andFilterWhere(['between', '{$column}', Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d'), Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d')])";
                     break;
                 case Schema::TYPE_DATETIME:
-                    $likeConditions[] = "->andFilterWhere(['like', '{$column}', Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d 00:00:00'), Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d 23:59:59')])";
+                    $likeConditions[] = "->andFilterWhere(['between', '{$column}', Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d 00:00:00'), Yii::\$app->formatter->asDate(\$this->{$column}, 'YYYY-MM-d 23:59:59')])";
                     break;
                 default:
                     $likeConditions[] = "->andFilterWhere(['like', '{$column}', \$this->{$column}])";
