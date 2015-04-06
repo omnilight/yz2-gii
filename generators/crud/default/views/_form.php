@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * This is the template for generating CRUD search class of the specified model.
+ */
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
@@ -35,8 +37,10 @@ use yz\admin\widgets\ActiveForm;
     <?= "<?php " ?>$form = ActiveForm::begin(); ?>
 
     <?= "<?php " ?>$box->beginBody() ?>
-<?php foreach ($safeAttributes as $attribute) {
-    echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
+<?php foreach ($generator->getColumnNames() as $attribute) {
+    if (in_array($attribute, $safeAttributes)) {
+        echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+    }
 } ?>
     <?= "<?php " ?>$box->endBody() ?>
 

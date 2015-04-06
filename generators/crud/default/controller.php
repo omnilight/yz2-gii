@@ -1,11 +1,12 @@
 <?php
+/**
+ * This is the template for generating a CRUD controller class file.
+ */
 
 use yii\db\ActiveRecordInterface;
 use yii\helpers\StringHelper;
 
 /**
- * This is the template for generating a CRUD controller class file.
- *
  * @var yii\web\View $this
  * @var yz\gii\generators\crud\Generator $generator
  */

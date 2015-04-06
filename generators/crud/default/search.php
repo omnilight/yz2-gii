@@ -1,10 +1,10 @@
 <?php
-
-use yii\helpers\StringHelper;
-
 /**
  * This is the template for generating CRUD search class of the specified model.
- *
+ */
+
+use yii\helpers\StringHelper;
+/**
  * @var yii\web\View $this
  * @var yz\gii\generators\crud\Generator $generator
  */
@@ -69,7 +69,11 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
             'query' => $query,
         ]);
 
-        if (!($this->load($params) && $this->validate())) {
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
             return $dataProvider;
         }
 

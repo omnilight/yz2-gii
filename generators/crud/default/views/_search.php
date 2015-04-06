@@ -37,9 +37,9 @@ use yz\admin\widgets\FormBox;
 $count = 0;
 foreach ($generator->getColumnNames() as $attribute) {
     if (++$count < 6) {
-        echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n";
+        echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
     } else {
-        echo "    <?php /* echo " . $generator->generateActiveSearchField($attribute) . " */ ?>\n";
+        echo "    <?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
     }
 }
 ?>
