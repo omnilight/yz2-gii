@@ -219,7 +219,7 @@ class Generator extends \yii\gii\Generator
             if ($this->moduleID) {
                 $module = Yii::$app->getModule($this->moduleID);
                 $moduleViewPath = $module->getViewPath();
-                return Yii::getAlias("{$moduleViewPath}/views/" . $this->getControllerID());
+                return Yii::getAlias("{$moduleViewPath}/" . $this->getControllerID());
             } else {
                 return Yii::getAlias('@app/views/' . $this->getControllerID());
             }
