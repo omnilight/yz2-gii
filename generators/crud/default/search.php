@@ -27,6 +27,7 @@ namespace <?= StringHelper::dirname(ltrim($generator->searchModelClass, '\\')) ?
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 use <?= ltrim($generator->modelClass, '\\') . (isset($modelAlias) ? " as $modelAlias" : "") ?>;
 
 /**
@@ -63,11 +64,8 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
      */
     public function search($params)
     {
-        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $query = $this->prepareQuery();
+        $dataProvider = $this->prepareDataProvider();
 
         $this->load($params);
 
@@ -77,8 +75,38 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
             return $dataProvider;
         }
 
-        <?= implode("\n        ", $searchConditions) ?>
+        $this->prepareFilters();
 
         return $dataProvider;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    protected function prepareQuery()
+    {
+        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
+        return $query;
+    }
+
+    /**
+     * @param ActiveQuery $query
+     * @return ActiveDataProvider
+     */
+    protected function prepareDataProvider($query)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        return $dataProvider;
+    }
+
+    /**
+     * @param ActiveQuery $query
+     */
+    protected function prepareFilters($query)
+    {
+        <?= implode("\n        ", $searchConditions) ?>
+
     }
 }
