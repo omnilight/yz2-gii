@@ -68,8 +68,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return array_merge(parent::actions(), [
             'export' => [
                 'class' => ExportAction::className(),
-                'dataProvider' => function($params) {
-                        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
+                'searchModel' => function($params) {
+                    /** @var <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?> $searchModel */
+                    return Yii::createObject(<?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>::className());
+                },
+                'dataProvider' => function($params, <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?> $searchModel) {
                         $dataProvider = $searchModel->search($params);
                         return $dataProvider;
                     },
@@ -84,7 +87,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionIndex()
     {
 <?php if (!empty($generator->searchModelClass)): ?>
-        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>;
+        /** @var <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?> $searchModel */
+        $searchModel = Yii::createObject(<?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>::className());
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         return $this->render('index', [
@@ -104,7 +108,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 <?php endif; ?>
     }
 
-    public function getGridColumns()
+    public function getGridColumns(<?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?> $searchModel)
     {
         return [
 <?php
