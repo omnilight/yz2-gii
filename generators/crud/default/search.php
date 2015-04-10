@@ -28,12 +28,14 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
+use yz\admin\search\SearchModelEvent;
+use yz\admin\search\SearchModelInterface;
 use <?= ltrim($generator->modelClass, '\\') . (isset($modelAlias) ? " as $modelAlias" : "") ?>;
 
 /**
  * <?= $searchModelClass ?> represents the model behind the search form about `<?= $generator->modelClass ?>`.
  */
-class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $modelClass ?>
+class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $modelClass ?> implements SearchModelInterface
 
 {
     /**
@@ -65,7 +67,15 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
     public function search($params)
     {
         $query = $this->prepareQuery();
+        $this->trigger(self::EVENT_AFTER_PREPARE_QUERY, new SearchModelEvent([
+            'query' => $query,
+        ]));
+
         $dataProvider = $this->prepareDataProvider();
+        $this->trigger(self::EVENT_AFTER_PREPARE_DATA_PROVIDER, new SearchModelEvent([
+            'query' => $query,
+            'dataProvider' => $dataProvider,
+        ]));
 
         $this->load($params);
 
@@ -76,6 +86,10 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
         }
 
         $this->prepareFilters();
+        $this->trigger(self::EVENT_AFTER_PREPARE_FILTERS, new SearchModelEvent([
+            'query' => $query,
+            'dataProvider' => $dataProvider,
+        ]));
 
         return $dataProvider;
     }
