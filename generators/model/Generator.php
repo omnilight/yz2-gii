@@ -8,12 +8,12 @@
 namespace yz\gii\generators\model;
 
 use Yii;
+use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
 use yii\db\Schema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
-use yii\base\NotSupportedException;
 
 /**
  * This generator will generate one or multiple ActiveRecord classes for the specified database table.
@@ -57,7 +57,9 @@ class Generator extends \yii\gii\Generator
     {
         return array_merge(parent::rules(), [
             [['db', 'ns', 'tableName', 'modelClass', 'baseClass'], 'filter', 'filter' => 'trim'],
-            [['ns'], 'filter', 'filter' => function($value) { return trim($value, '\\'); }],
+            [['ns'], 'filter', 'filter' => function ($value) {
+                return trim($value, '\\');
+            }],
 
             [['db', 'ns', 'tableName', 'baseClass'], 'required'],
             [['db', 'modelClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
@@ -217,51 +219,55 @@ class Generator extends \yii\gii\Generator
     public function generateRules($table)
     {
         $types = [];
-        $lengths = [];
+        $columnRules = [];
+
         foreach ($table->columns as $column) {
             if ($column->autoIncrement) {
                 continue;
             }
             if (!$column->allowNull && $column->defaultValue === null) {
-                $types['required'][] = $column->name;
+                $columnRules[$column->name][] = "['{$column->name}', 'required']";
             }
             switch ($column->type) {
                 case Schema::TYPE_SMALLINT:
                 case Schema::TYPE_INTEGER:
                 case Schema::TYPE_BIGINT:
-                    $types['integer'][] = $column->name;
+                    $columnRules[$column->name][] = "['{$column->name}', 'integer']";
                     break;
                 case Schema::TYPE_BOOLEAN:
-                    $types['boolean'][] = $column->name;
+                    $columnRules[$column->name][] = "['{$column->name}', 'boolean']";
                     break;
                 case Schema::TYPE_FLOAT:
                 case Schema::TYPE_DOUBLE:
                 case Schema::TYPE_DECIMAL:
                 case Schema::TYPE_MONEY:
-                    $types['number'][] = $column->name;
+                    $columnRules[$column->name][] = "['{$column->name}', 'number']";
                     break;
                 case Schema::TYPE_DATE:
                 case Schema::TYPE_TIME:
                 case Schema::TYPE_DATETIME:
                 case Schema::TYPE_TIMESTAMP:
-                    $types['safe'][] = $column->name;
+                    $columnRules[$column->name][] = "['{$column->name}', 'safe']";
                     break;
                 default: // strings
                     if ($column->size > 0) {
-                        $lengths[$column->size][] = $column->name;
+                        $columnRules[$column->name][] = "['{$column->name}', 'string', 'max' => {$column->size}]";
                     } else {
-                        $types['string'][] = $column->name;
+                        $columnRules[$column->name][] = "['{$column->name}', 'string']";
                     }
             }
-        }
-        $rules = [];
-        foreach ($types as $type => $columns) {
-            $rules[] = "[['" . implode("', '", $columns) . "'], '$type']";
-        }
-        foreach ($lengths as $length => $columns) {
-            $rules[] = "[['" . implode("', '", $columns) . "'], 'string', 'max' => $length]";
+            switch ($column->name) {
+                case 'email':
+                    $columnRules[$column->name][] = "['{$column->name}', 'email']";
+                    break;
+            }
         }
 
+
+        $rules = [];
+        foreach ($columnRules as $columnName => $rulesForColumn) {
+            $rules = array_merge($rules, $rulesForColumn);
+        }
         // Unique indexes rules
         try {
             $db = $this->getDbConnection();
