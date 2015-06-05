@@ -71,7 +71,7 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
             'query' => $query,
         ]));
 
-        $dataProvider = $this->prepareDataProvider();
+        $dataProvider = $this->prepareDataProvider($query);
         $this->trigger(self::EVENT_AFTER_PREPARE_DATA_PROVIDER, new SearchModelEvent([
             'query' => $query,
             'dataProvider' => $dataProvider,
@@ -85,7 +85,7 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
             return $dataProvider;
         }
 
-        $this->prepareFilters();
+        $this->prepareFilters($query);
         $this->trigger(self::EVENT_AFTER_PREPARE_FILTERS, new SearchModelEvent([
             'query' => $query,
             'dataProvider' => $dataProvider,
