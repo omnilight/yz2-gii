@@ -103,7 +103,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'columns' => $this->getGridColumns(),
+            'columns' => $this->getGridColumns($searchModel),
         ]);
 <?php endif; ?>
     }
