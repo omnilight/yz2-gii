@@ -147,11 +147,11 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully created'));
 			return $this->getCreateUpdateResponse($model);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -167,11 +167,11 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 		if ($model->load(\Yii::$app->request->post()) && $model->save()) {
 			\Yii::$app->session->setFlash(\yz\Yz::FLASH_SUCCESS, \Yii::t('admin/t', 'Record was successfully updated'));
 			return $this->getCreateUpdateResponse($model);
-		} else {
-			return $this->render('update', [
-				'model' => $model,
-			]);
 		}
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
 	}
 
 
