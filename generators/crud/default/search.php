@@ -97,9 +97,17 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
     /**
      * @return ActiveQuery
      */
+    protected function getQuery()
+    {
+        return <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     protected function prepareQuery()
     {
-        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
+        $query = $this->getQuery();
         return $query;
     }
 
