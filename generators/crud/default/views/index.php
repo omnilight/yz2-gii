@@ -16,7 +16,7 @@ echo "<?php\n";
 
 use yii\helpers\Html;
 use yz\admin\widgets\Box;
-use <?= $generator->indexWidgetType === 'grid' ? "yz\\admin\\widgets\\GridView" : "yii\\widgets\\ListView" ?>;
+use <?= $generator->indexWidgetType === 'grid' ? "yz\\admin\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
 use yz\admin\widgets\ActionButtons;
 
 /**
