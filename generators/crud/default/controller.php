@@ -94,7 +94,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-            'columns' => $this->getGridColumns(),
+            'columns' => $this->getGridColumns($searchModel),
         ]);
 <?php else: ?>
         $dataProvider = new ActiveDataProvider([
