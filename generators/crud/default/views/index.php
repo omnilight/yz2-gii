@@ -33,7 +33,7 @@ $this->params['header'] = $this->title;
 <?= "<?php" ?> $box = Box::begin(['cssClass' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index box-primary']) ?>
     <div class="text-right">
         <?= "<?php" ?> echo ActionButtons::widget([
-            'order' => [['search'], ['export', 'create', 'delete', 'return']],
+            'order' => [/*['search'],*/ ['export', 'create', 'delete', 'return']],
             'gridId' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-grid',
             'searchModel' => $searchModel,
             'modelClass' => '<?= $generator->modelClass ?>',
@@ -41,7 +41,7 @@ $this->params['header'] = $this->title;
     </div>
 
 <?php if(!empty($generator->searchModelClass)): ?>
-<?= "    <?php " ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+<?= "    <?php " ?>//echo $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
