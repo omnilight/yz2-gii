@@ -59,6 +59,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
+            'accessControl' => $this->accessControlBehavior(),
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
