@@ -45,16 +45,16 @@ use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yz\admin\actions\ExportAction;
 use yz\admin\widgets\ActiveForm;
-use yz\admin\traits\CrudControllerTrait;
 use yz\admin\traits\CheckAccessTrait;
-use yz\admin\contracts\AccessControllInterface;
+use yz\admin\traits\CrudTrait;
+use yz\admin\contracts\AccessControlInterface;
 
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
  */
-class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?> implements AccessControllInterface
+class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) ?> implements AccessControllInterface
 {
-    use CrudControllerTrait, CheckAccessTrait;
+    use CrudTrait, CheckAccessTrait;
 
     public function behaviors()
     {
