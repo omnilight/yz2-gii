@@ -52,7 +52,7 @@ use yz\admin\contracts\AccessControlInterface;
 /**
  * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
  */
-class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) ?> implements AccessControllInterface
+class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) ?> implements AccessControlInterface
 {
     use CrudTrait, CheckAccessTrait;
 
