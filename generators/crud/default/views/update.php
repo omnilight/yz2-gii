@@ -31,7 +31,7 @@ $this->params['header'] = $this->title;
     <div class="text-right">
         <?= "<?php " ?> Box::begin() ?>
         <?= "<?= " ?> ActionButtons::widget([
-            'order' => [['index', 'update', 'return']],
+            'order' => [['index', 'return']],
             'addReturnUrl' => false,
         ]) ?>
         <?= "<?php " ?> Box::end() ?>
